@@ -68,7 +68,7 @@ func (ls *LetStatement) String() string {
 		out.WriteString(ls.Value.String())
 	}
 
-	out.WriteString(";")
+	out.WriteString(token.SEMICOLON)
 
 	return out.String()
 }
@@ -104,7 +104,7 @@ func (rs *ReturnStatement) String() string {
 		out.WriteString(rs.ReturnValue.String())
 	}
 
-	out.WriteString(";")
+	out.WriteString(token.SEMICOLON)
 
 	return out.String()
 }
@@ -152,10 +152,10 @@ func (pe *PrefixExpression) TokenLiteral() string {
 func (pe *PrefixExpression) String() string {
 	var out bytes.Buffer
 
-	out.WriteString("(")
+	out.WriteString(token.LPAREN)
 	out.WriteString(pe.Operator)
 	out.WriteString(pe.Right.String())
-	out.WriteString(")")
+	out.WriteString(token.RPAREN)
 
 	return out.String()
 }
@@ -174,11 +174,11 @@ func (ie *InfixExpression) TokenLiteral() string {
 func (ie *InfixExpression) String() string {
 	var out bytes.Buffer
 
-	out.WriteString("(")
+	out.WriteString(token.LPAREN)
 	out.WriteString(ie.Left.String())
 	out.WriteString(" " + ie.Operator + " ")
 	out.WriteString(ie.Right.String())
-	out.WriteString(")")
+	out.WriteString(token.RPAREN)
 
 	return out.String()
 }
