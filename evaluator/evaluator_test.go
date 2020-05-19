@@ -112,6 +112,27 @@ func TestBangOperator(t *testing.T) {
 	}
 }
 
+// As you can see from the tests, Monkey allows
+// return statements in the top-level scope (and
+// not, say, just inside function bodies). I'm not
+// a big fan of this and plan to eventually fix it.
+func TestReturnStatement(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{"return 10;", 10},
+		{"return 10; 9;", 10},
+		{"return 2 * 5; 9", 10},
+		{"9; return 2 * 5; 9;", 10},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
+	}
+}
+
 func testEval(input string) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
