@@ -1,7 +1,12 @@
 package object
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
+
+	"monkey/ast"
+	"monkey/token"
 )
 
 // Some of these names don't seem super idiomatic
@@ -13,6 +18,7 @@ type ObjectType string
 const (
 	BOOLEAN_OBJ      = "BOOLEAN"
 	ERROR_OBJ        = "ERROR"
+	FUNCTION_OBJ     = "FUNCTION"
 	INTEGER_OBJ      = "INTEGER"
 	NULL_OBJ         = "NULL"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
@@ -75,4 +81,33 @@ func (e *Error) Type() ObjectType {
 
 func (e *Error) Inspect() string {
 	return fmt.Sprintf("ERROR: %s", e.Message)
+}
+
+type Function struct {
+	Parameters []*ast.Identifier
+	Body       *ast.BlockStatement
+	Env        *Environment
+}
+
+func (f *Function) Type() ObjectType {
+	return FUNCTION_OBJ
+}
+
+func (f *Function) Inspect() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range f.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString("fn")
+	out.WriteString(token.LPAREN)
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(fmt.Sprintf("%s %s\n", token.RPAREN, token.LBRACE))
+	out.WriteString(f.Body.String())
+	out.WriteString("\n")
+	out.WriteString(token.RBRACE)
+
+	return out.String()
 }
