@@ -169,6 +169,25 @@ func TestBooleanExpression(t *testing.T) {
 	}
 }
 
+func TestStringLiteralExpression(t *testing.T) {
+	input := `"Hello, world!";`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+	if !ok {
+		t.Fatalf("exp not an *ast.StringLiteral; instead got %T", stmt.Expression)
+	}
+
+	if literal.Value != "Hello, world!" {
+		t.Errorf("literal.Value not %q; instead got %q", "Hello, world!", literal.Value)
+	}
+}
+
 func TestIfExpression(t *testing.T) {
 	input := `if (x < y) { x }`
 
