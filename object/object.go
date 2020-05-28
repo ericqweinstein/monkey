@@ -17,6 +17,7 @@ type ObjectType string
 
 const (
 	BOOLEAN_OBJ      = "BOOLEAN"
+	BUILTIN_OBJ      = "BUILTIN"
 	ERROR_OBJ        = "ERROR"
 	FUNCTION_OBJ     = "FUNCTION"
 	INTEGER_OBJ      = "INTEGER"
@@ -123,4 +124,18 @@ func (f *Function) Inspect() string {
 	out.WriteString(token.RBRACE)
 
 	return out.String()
+}
+
+type BuiltInFunction func(args ...Object) Object
+
+type BuiltIn struct {
+	Fn BuiltInFunction
+}
+
+func (b *BuiltIn) Type() ObjectType {
+	return BUILTIN_OBJ
+}
+
+func (b *BuiltIn) Inspect() string {
+	return "builtin function"
 }
