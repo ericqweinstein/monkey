@@ -16,6 +16,7 @@ import (
 type ObjectType string
 
 const (
+	ARRAY_OBJ        = "ARRAY"
 	BOOLEAN_OBJ      = "BOOLEAN"
 	BUILTIN_OBJ      = "BUILTIN"
 	ERROR_OBJ        = "ERROR"
@@ -138,4 +139,27 @@ func (b *BuiltIn) Type() ObjectType {
 
 func (b *BuiltIn) Inspect() string {
 	return "builtin function"
+}
+
+type Array struct {
+	Elements []Object
+}
+
+func (ao *Array) Type() ObjectType {
+	return ARRAY_OBJ
+}
+
+func (ao *Array) Inspect() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, e := range ao.Elements {
+		elements = append(elements, e.Inspect())
+	}
+
+	out.WriteString(token.LBRACKET)
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString(token.RBRACKET)
+
+	return out.String()
 }
