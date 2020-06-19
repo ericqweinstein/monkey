@@ -355,3 +355,32 @@ func (ie *IndexExpression) String() string {
 
 	return out.String()
 }
+
+type HashLiteral struct {
+	Token token.Token // The `{` token
+	// The only valid hash keys in Monkey are strings, integers,
+	// and booleans; however, we want to support expressions
+	// that evaluate to those types, so we'll keep keys and
+	// values as Expressions in the parsing stage, then handle
+	// any exceptions that arise during the evaluation phase.
+	Pairs map[Expression]Expression
+}
+
+func (hl *HashLiteral) expressionNode() {}
+func (hl *HashLiteral) TokenLiteral() string {
+	return hl.Token.Literal
+}
+func (hl *HashLiteral) String() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for key, value := range hl.Pairs {
+		pairs = append(pairs, key.String()+token.COLON+value.String())
+	}
+
+	out.WriteString(token.LBRACE)
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString(token.RBRACE)
+
+	return out.String()
+}
