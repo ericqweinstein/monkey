@@ -17,6 +17,7 @@ type Definition struct {
 
 const (
 	OpConstant Opcode = iota
+	OpAdd
 )
 
 var definitions = map[Opcode]*Definition{
@@ -25,6 +26,7 @@ var definitions = map[Opcode]*Definition{
 	// can't have more than 65,536 constants in our Monkey programs,
 	// but that should be fine.
 	OpConstant: {"OpConstant", []int{2}},
+	OpAdd:      {"OpAdd", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {
@@ -100,6 +102,8 @@ func (ins Instructions) fmtInstruction(def *Definition, operands []int) string {
 	}
 
 	switch operandCount {
+	case 0:
+		return def.Name
 	case 1:
 		return fmt.Sprintf("%s %d", def.Name, operands[0])
 	}
